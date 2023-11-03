@@ -1,0 +1,11 @@
+rm -r ./*.log
+rm -r ./*.json
+rm -r ../precice-run
+rm -r ./Testing
+rm -r ./CMakeCache.txt
+rm -r ./cmake_install.cmake
+rm -r ./CTestTestfile.cmake
+rm -r ./fluid-solver
+rm -r ./CMakeFiles
+rm -r ./Makefile
+rm -r ./test.cmake

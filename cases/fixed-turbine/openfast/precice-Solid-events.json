@@ -1,0 +1,513 @@
+{
+  "Finalized": "2023-11-03T18:13:54.572",
+  "Initialized": "2023-11-03T18:13:54.216",
+  "Name": "",
+  "Ranks": [
+    {
+      "Finalized": "2023-11-03T18:13:54.572",
+      "Initialized": "2023-11-03T18:13:54.216",
+      "StateChanges": [
+        {
+          "Name": "_GLOBAL",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "_GLOBAL",
+          "State": 0,
+          "Timestamp": 356
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 146
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 148
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 202
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 203
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 258
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 258
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 302
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 303
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 351
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 352
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 1,
+          "Timestamp": 147
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 0,
+          "Timestamp": 148
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 1,
+          "Timestamp": 202
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 0,
+          "Timestamp": 203
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 1,
+          "Timestamp": 258
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 0,
+          "Timestamp": 258
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 1,
+          "Timestamp": 302
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 0,
+          "Timestamp": 303
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 1,
+          "Timestamp": 351
+        },
+        {
+          "Name": "advance/m2n.receiveData",
+          "State": 0,
+          "Timestamp": 352
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 1,
+          "Timestamp": 146
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 0,
+          "Timestamp": 147
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 1,
+          "Timestamp": 202
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 0,
+          "Timestamp": 202
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 1,
+          "Timestamp": 258
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 0,
+          "Timestamp": 258
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 1,
+          "Timestamp": 302
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 0,
+          "Timestamp": 302
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 1,
+          "Timestamp": 351
+        },
+        {
+          "Name": "advance/m2n.sendData",
+          "State": 0,
+          "Timestamp": 351
+        },
+        {
+          "Name": "configure",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "configure",
+          "State": 0,
+          "Timestamp": 0
+        },
+        {
+          "Name": "finalize",
+          "State": 1,
+          "Timestamp": 355
+        },
+        {
+          "Name": "finalize",
+          "State": 0,
+          "Timestamp": 356
+        },
+        {
+          "Name": "initialize",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "initialize",
+          "State": 0,
+          "Timestamp": 89
+        },
+        {
+          "Name": "initialize/m2n.broadcastVertexDistributions",
+          "State": 1,
+          "Timestamp": 87
+        },
+        {
+          "Name": "initialize/m2n.broadcastVertexDistributions",
+          "State": 0,
+          "Timestamp": 87
+        },
+        {
+          "Name": "initialize/m2n.buildCommunicationMap",
+          "State": 1,
+          "Timestamp": 87
+        },
+        {
+          "Name": "initialize/m2n.buildCommunicationMap",
+          "State": 0,
+          "Timestamp": 87
+        },
+        {
+          "Name": "initialize/m2n.createCommunications",
+          "State": 1,
+          "Timestamp": 87
+        },
+        {
+          "Name": "initialize/m2n.createCommunications",
+          "State": 0,
+          "Timestamp": 89
+        },
+        {
+          "Name": "initialize/m2n.exchangeVertexDistribution",
+          "State": 1,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/m2n.exchangeVertexDistribution",
+          "State": 0,
+          "Timestamp": 87
+        },
+        {
+          "Name": "initialize/m2n.requestPrimaryRankConnection",
+          "State": 1,
+          "Timestamp": 1
+        },
+        {
+          "Name": "initialize/m2n.requestPrimaryRankConnection",
+          "State": 0,
+          "Timestamp": 1
+        },
+        {
+          "Name": "initialize/m2n.requestSecondaryRanksConnection",
+          "State": 1,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/m2n.requestSecondaryRanksConnection",
+          "State": 0,
+          "Timestamp": 89
+        },
+        {
+          "Name": "initialize/partition.gatherMesh.Solid-Mesh",
+          "State": 1,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/partition.gatherMesh.Solid-Mesh",
+          "State": 0,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/partition.prepareMesh.Solid-Mesh",
+          "State": 1,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/partition.prepareMesh.Solid-Mesh",
+          "State": 0,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/partition.sendGlobalMesh.Solid-Mesh",
+          "State": 1,
+          "Timestamp": 2
+        },
+        {
+          "Name": "initialize/partition.sendGlobalMesh.Solid-Mesh",
+          "State": 0,
+          "Timestamp": 2
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 148
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 202
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 203
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 258
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 258
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 302
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 303
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 351
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 352
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 355
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 2,
+          "Timestamp": 0
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 89
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 0,
+          "Timestamp": 146
+        }
+      ],
+      "Timings": {
+        "_GLOBAL": {
+          "Count": 1,
+          "Data": {},
+          "Max": 356,
+          "Min": 356,
+          "TimeRatio": 1.0,
+          "Total": 356
+        },
+        "advance": {
+          "Count": 5,
+          "Data": {},
+          "Max": 1,
+          "Min": 0,
+          "TimeRatio": 0.011235955056179775,
+          "Total": 4
+        },
+        "advance/m2n.receiveData": {
+          "Count": 5,
+          "Data": {},
+          "Max": 1,
+          "Min": 0,
+          "TimeRatio": 0.008426966292134831,
+          "Total": 3
+        },
+        "advance/m2n.sendData": {
+          "Count": 5,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "configure": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "finalize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 88,
+          "Min": 88,
+          "TimeRatio": 0.24719101123595505,
+          "Total": 88
+        },
+        "initialize/m2n.broadcastVertexDistributions": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/m2n.buildCommunicationMap": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/m2n.createCommunications": {
+          "Count": 1,
+          "Data": {
+            "Connections": [
+              1
+            ]
+          },
+          "Max": 1,
+          "Min": 1,
+          "TimeRatio": 0.0028089887640449437,
+          "Total": 1
+        },
+        "initialize/m2n.exchangeVertexDistribution": {
+          "Count": 1,
+          "Data": {},
+          "Max": 84,
+          "Min": 84,
+          "TimeRatio": 0.23595505617977527,
+          "Total": 84
+        },
+        "initialize/m2n.requestPrimaryRankConnection": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/m2n.requestSecondaryRanksConnection": {
+          "Count": 1,
+          "Data": {},
+          "Max": 86,
+          "Min": 86,
+          "TimeRatio": 0.24157303370786518,
+          "Total": 86
+        },
+        "initialize/partition.gatherMesh.Solid-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/partition.prepareMesh.Solid-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/partition.sendGlobalMesh.Solid-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "solver.advance": {
+          "Count": 5,
+          "Data": {},
+          "Max": 54,
+          "Min": 3,
+          "TimeRatio": 0.5730337078651685,
+          "Total": 204
+        },
+        "solver.initialize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 58,
+          "Min": 58,
+          "TimeRatio": 0.16292134831460675,
+          "Total": 58
+        }
+      }
+    }
+  ]
+}

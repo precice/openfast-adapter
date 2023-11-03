@@ -1,0 +1,12 @@
+rm -r ../nrel5mw/*.chkp
+rm -r ../nrel5mw/*.outb
+rm -r ../nrel5mw/*.out
+rm -r ../nrel5mw/*.sum
+rm -r ../nrel5mw/*.ech
+rm -r ./*.h5
+rm -r ./*.bak
+rm -r ./turbineAlloc.0.txt
+rm -r ./Makefile
+rm -r ./CMakeFiles
+rm -r ./*.cmake
+rm -r ./CMakeCache.txt
