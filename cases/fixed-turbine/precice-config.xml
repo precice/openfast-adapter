@@ -13,7 +13,12 @@
     <data:vector name="Force" />
     <data:vector name="Velocity" />
 
-    <mesh name="Solid-Mesh">
+    <mesh name="Solid-Mesh-Force">
+      <use-data name="Force" />
+      <use-data name="Velocity" />
+    </mesh>
+    
+    <mesh name="Solid-Mesh-Velocity">
       <use-data name="Force" />
       <use-data name="Velocity" />
     </mesh>
@@ -24,22 +29,24 @@
     </mesh>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Mesh" provide="yes" />
-      <write-data name="Force" mesh="Solid-Mesh" />
-      <read-data name="Velocity" mesh="Solid-Mesh" />
+      <use-mesh name="Solid-Mesh-Force" provide="yes" />
+      <use-mesh name="Solid-Mesh-Velocity" provide="yes" />
+      <write-data name="Force" mesh="Solid-Mesh-Force" />
+      <read-data name="Velocity" mesh="Solid-Mesh-Velocity" />
     </participant>
 
     <participant name="Fluid">
-      <use-mesh name="Solid-Mesh" from="Solid" />
+      <use-mesh name="Solid-Mesh-Force" from="Solid" />
+      <use-mesh name="Solid-Mesh-Velocity" from="Solid" />
       <use-mesh name="Fluid-Mesh" provide="yes" />
       <mapping:nearest-neighbor
         direction="write"
         from="Fluid-Mesh"
-        to="Solid-Mesh"
+        to="Solid-Mesh-Velocity"
         constraint="conservative" />
       <mapping:nearest-neighbor
         direction="read"
-        from="Solid-Mesh"
+        from="Solid-Mesh-Force"
         to="Fluid-Mesh"
         constraint="consistent" />
       <write-data name="Velocity" mesh="Fluid-Mesh" />
@@ -52,8 +59,8 @@
       <participants first="Solid" second="Fluid" />
       <max-time-windows value="5" />
       <time-window-size value="1.0" />
-      <exchange data="Force" mesh="Solid-Mesh" from="Solid" to="Fluid" />
-      <exchange data="Velocity" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+      <exchange data="Force" mesh="Solid-Mesh-Force" from="Solid" to="Fluid" />
+      <exchange data="Velocity" mesh="Solid-Mesh-Velocity" from="Fluid" to="Solid" />
     </coupling-scheme:serial-explicit>
   </solver-interface>
 </precice-configuration>

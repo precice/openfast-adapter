@@ -168,43 +168,64 @@ int main(int argc, char** argv) {
     std::string configFileName  = argv[1];
     
     std::string solverName      = "Solid";
-    std::string meshName        = "Solid-Mesh";
-    std::string dataWriteName   = "Force";
+    std::string meshReadName    = "Solid-Mesh-Velocity";
+    std::string meshWriteName   = "Solid-Mesh-Force";
     std::string dataReadName    = "Velocity";
+    std::string dataWriteName   = "Force";
 
-    std::cout << "DUMMY: Running OpenFAST dummy with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
+    std::cout << "Running OpenFAST dummy with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
 
     SolverInterface interface(solverName, configFileName, commRank, commSize);
     
-    // --------------- Set up the mesh ------------------------------------------------------
+    // --------------- Set up the meshes ------------------------------------------------------
 
-    int meshID           = interface.getMeshID(meshName);
-    int dimensions       = interface.getDimensions();
-    int numberOfVertices = FAST.get_numForcePts(iTurb);
+    int meshReadID              = interface.getMeshID(meshReadName);
+    int meshWriteID             = interface.getMeshID(meshWriteName);
+    int dimensions              = interface.getDimensions();
+    int numberOfForceVertices   = FAST.get_numForcePts(iTurb);
+    int numberOfVelVertices     = FAST.get_numVelPts(iTurb);
 
-    const int readDataID  = interface.getDataID(dataReadName, meshID);
-    const int writeDataID = interface.getDataID(dataWriteName, meshID);
+    const int readDataID        = interface.getDataID(dataReadName, meshReadID);
+    const int writeDataID       = interface.getDataID(dataWriteName, meshWriteID);
 
-    std::vector<double> readData(numberOfVertices * dimensions);
-    std::vector<double> writeData(numberOfVertices * dimensions);
-    std::vector<double> vertices(numberOfVertices * dimensions);
-    std::vector<int>    vertexIDs(numberOfVertices);
+    std::vector<double> readData(numberOfVelVertices * dimensions);
+    std::vector<double> writeData(numberOfForceVertices * dimensions);
+    std::vector<double> verticesVel(numberOfVelVertices * dimensions);
+    std::vector<double> verticesForce(numberOfForceVertices * dimensions);
+    std::vector<int>    vertexReadIDs(numberOfVelVertices);
+    std::vector<int>    vertexWriteIDs(numberOfForceVertices);
     
-    //Initialize mesh with data from FAST
-    for (int i = 0; i < numberOfVertices; i++) {
+    std::vector<double> nodeVelocity(dimensions);
+    std::vector<double> nodeForce(dimensions);
+    
+    std::cout << "Number of velocity nodes: " + std::to_string(numberOfVelVertices) + "\n";
+    std::cout << "Number of force nodes: " + std::to_string(numberOfForceVertices) + "\n";
+    
+    //Initialize force mesh with data from FAST
+    for (int i = 0; i < numberOfForceVertices; i++) {
       for (int j = 0; j < dimensions; j++) {
         // positions
         FAST.getForceNodeCoordinates(coords, i, iTurb);
-        vertices.at(j + dimensions * i)  = coords[j];
-        // velocity - How to initialize? Data should come from Fluid Participant. Maybe initialize via preCICE, but probably later in the code
-        readData.at(j + dimensions * i)  = 0.0;
+        verticesForce.at(j + dimensions * i)  = coords[j];
         // force
         FAST.getForce(force, i, iTurb);
         writeData.at(j + dimensions * i) = force[j];
       }
     }
+    
+    //Initialize velocity mesh with initial data from preCICE or manually
+    for (int i = 0; i < numberOfVelVertices; i++) {
+      for (int j = 0; j < dimensions; j++) {
+        // positions
+        FAST.getVelNodeCoordinates(coords, i, iTurb);
+        verticesVel.at(j + dimensions * i)  = coords[j];
+        // velocity - How to initialize? Data should come from Fluid Participant. Initialize via preCICE, but probably later in the code
+        readData.at(j + dimensions * i)  = 1.0; //initialize velocity manually for now
+      }
+    }
 
-    interface.setMeshVertices(meshID, numberOfVertices, vertices.data(), vertexIDs.data());
+    interface.setMeshVertices(meshWriteID, numberOfForceVertices, verticesForce.data(), vertexWriteIDs.data());
+    interface.setMeshVertices(meshReadID, numberOfVelVertices, verticesVel.data(), vertexReadIDs.data());
 
     double dt = interface.initialize();
     
@@ -215,25 +236,28 @@ int main(int argc, char** argv) {
     while (interface.isCouplingOngoing()) {
 
         if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
-          std::cout << "Writing iteration checkpoint\n";
+          std::cout << "Dummy: Writing iteration checkpoint\n";
           time_cp = time;
           interface.markActionFulfilled(actionWriteIterationCheckpoint());
         }
         
         
-        // read data
+        // read data from Fluid
         if (interface.isReadDataAvailable()) {
-          interface.readBlockVectorData(readDataID, numberOfVertices, vertexIDs.data(), readData.data());
+          interface.readBlockVectorData(readDataID, numberOfVelVertices, vertexReadIDs.data(), readData.data());
         }
         
         // set data in FAST
-        //FAST.setVelocity(...);
+        for (int iVertice = 0; iVertice < numberOfVelVertices; iVertice++) {
+            for (int iDim = 0; iDim < dimensions; iDim++) {
+                nodeVelocity[iDim] = readData.at(iDim + dimensions * iVertice);
+            }
+            FAST.setVelocity(nodeVelocity, iVertice, iTurb);
+
+        }
         
-        // there are no velocity points defined on the turbine. maybe this is the problem?
-        // Do I have to initialize the velocity and force nodes, eg with coordinates and values?
-        // This would make sense and could explain why retrieving values from the nodes is currently failing
-        std::cout << std::to_string(FAST.get_numVelPts(iTurb)) + "\n";
-        
+        std::cout << "Read velocity in last node: " + std::to_string(nodeVelocity[0]) + "   " + std::to_string(nodeVelocity[1]) + "   " + std::to_string(nodeVelocity[2]) + "\n";
+         
         //for(int i=0; i < FAST.get_numVelPts(iTurb); i++) {
           // Get velocity node co-ordinates at time step 'n+1'
           //FAST.getVelNodeCoordinates(currentCoords, i, iTurb);
@@ -242,60 +266,30 @@ int main(int argc, char** argv) {
           //FAST.setVelocity(sampleVel, i, iTurb);
           //std::cout << std::to_string(i) + "\n";
         //}
-        
-        std::cout << "Velocity to FAST:\n";
-        for (int i = 0; i < 3; i++) { 
-          std::cout << std::to_string(velocity[i]) + "\n";
-        }
    
         
         // calculate next time step
         FAST.step();
         
-        
-        for(int i=0; i < FAST.get_numForcePts(iTurb); i++) {
-         // Get actuator node co-ordinates at time step 'n+1'
-         //FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
-         //Move the actuator point to this co-ordinate if nece++++~+*ssary
-         // Get force at actuator node at time step 'n+1'
-         //FAST.getForce(currentForce, i, iTurb);
-         
-         }
-        
-        
-        
-        
-        
-        std::cout << "Number of actuator points for Force: " + std::to_string(FAST.get_numForcePts(iTurb)) + "\n";
         // get data from FAST
-        //FAST.getForceNodeCoordinates(point, iNode, iTurb);
-        FAST.getForce(force, 9, iTurb);
-        //FAST.getChord(5, iTurb);
-        //std::cout << "Coords from FAST:\n";
-        //for (int i = 0; i < 3; i++) { 
-        //  std::cout << std::to_string(currentCoords[i]) + "\n";
-        //}
+        for(int i=0; i < numberOfForceVertices; i++) {
+           // It is possible to get the actuator node co-ordinates at time step 'n+1' with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
+           FAST.getForce(nodeForce, i, iTurb);
+           for (int iDim = 0; iDim < dimensions; iDim++) {
+              writeData.at(iDim + dimensions * i) = nodeForce[iDim];
+           }
+       }
         
-        std::cout << "Force from FAST:\n";
-        for (int i = 0; i < 3; i++) { 
-          std::cout << std::to_string(force[i]) + "\n";
-        }
-
         // write data
-        for (int i = 0; i < numberOfVertices * dimensions; i++) {
-          writeData.at(i) = readData.at(i) + 1;
-        }
-        
-        
         if (interface.isWriteDataRequired(dt)) {
-          interface.writeBlockVectorData(writeDataID, numberOfVertices, vertexIDs.data(), writeData.data());
+          interface.writeBlockVectorData(writeDataID, numberOfForceVertices, vertexWriteIDs.data(), writeData.data());
         }
 
         // advance the simulation
         dt = interface.advance(dt);
 
         if (interface.isActionRequired(actionReadIterationCheckpoint())) {
-          std::cout << "Reading iteration checkpoint\n";
+          std::cout << "Dummy: Reading iteration checkpoint\n";
           time = time_cp;
           interface.markActionFulfilled(actionReadIterationCheckpoint());
         } else {
