@@ -209,7 +209,7 @@ int main(int argc, char** argv) {
         verticesForce.at(j + dimensions * i)  = coords[j];
         // force
         FAST.getForce(force, i, iTurb);
-        writeData.at(j + dimensions * i) = force[j];
+        writeData.at(j + dimensions * i) = 10;//force[j];
       }
     }
     
@@ -220,7 +220,7 @@ int main(int argc, char** argv) {
         FAST.getVelNodeCoordinates(coords, i, iTurb);
         verticesVel.at(j + dimensions * i)  = coords[j];
         // velocity - How to initialize? Data should come from Fluid Participant. Initialize via preCICE, but probably later in the code
-        readData.at(j + dimensions * i)  = 1.0; //initialize velocity manually for now
+        readData.at(j + dimensions * i)  = 0.0; //initialize velocity manually for now
       }
     }
 
@@ -228,6 +228,15 @@ int main(int argc, char** argv) {
     interface.setMeshVertices(meshReadID, numberOfVelVertices, verticesVel.data(), vertexReadIDs.data());
 
     double dt = interface.initialize();
+    
+    if (interface.isActionRequired(actionWriteInitialData())) {
+        interface.writeBlockVectorData(writeDataID, numberOfForceVertices, vertexWriteIDs.data(), writeData.data());    
+        interface.markActionFulfilled(actionWriteInitialData());
+    }
+    
+    interface.initializeData();
+    
+    std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
     
     double time = 0.0;
 
@@ -246,6 +255,7 @@ int main(int argc, char** argv) {
         if (interface.isReadDataAvailable()) {
           interface.readBlockVectorData(readDataID, numberOfVelVertices, vertexReadIDs.data(), readData.data());
         }
+        std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
         
         // set data in FAST
         for (int iVertice = 0; iVertice < numberOfVelVertices; iVertice++) {
@@ -255,30 +265,22 @@ int main(int argc, char** argv) {
             FAST.setVelocity(nodeVelocity, iVertice, iTurb);
 
         }
-        
-        std::cout << "Read velocity in last node: " + std::to_string(nodeVelocity[0]) + "   " + std::to_string(nodeVelocity[1]) + "   " + std::to_string(nodeVelocity[2]) + "\n";
-         
-        //for(int i=0; i < FAST.get_numVelPts(iTurb); i++) {
-          // Get velocity node co-ordinates at time step 'n+1'
-          //FAST.getVelNodeCoordinates(currentCoords, i, iTurb);
-          //Sample velocity from CFD solver at currentCoords into sampleVel here
-          // Set velocity at the velocity nodes at time step 'n+1'
-          //FAST.setVelocity(sampleVel, i, iTurb);
-          //std::cout << std::to_string(i) + "\n";
-        //}
    
-        
         // calculate next time step
         FAST.step();
         
         // get data from FAST
         for(int i=0; i < numberOfForceVertices; i++) {
-           // It is possible to get the actuator node co-ordinates at time step 'n+1' with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
            FAST.getForce(nodeForce, i, iTurb);
            for (int iDim = 0; iDim < dimensions; iDim++) {
               writeData.at(iDim + dimensions * i) = nodeForce[iDim];
            }
-       }
+        }
+        std::cout << "Force in node four of blade 1: " + std::to_string(writeData[9]) + "   " + std::to_string(writeData[10]) + "   " + std::to_string(writeData[11]) + "\n";
+        
+        // Update positions of vertices?
+        // It is possible to get the velocity node co-ordinates with: FAST.getVelNodeCoordinates(currentCoords, i, iTurb);
+        // It is possible to get the actuator node co-ordinates with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
         
         // write data
         if (interface.isWriteDataRequired(dt)) {

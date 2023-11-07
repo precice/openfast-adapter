@@ -56,13 +56,12 @@ int main(int argc, char **argv)
   bladeRoot    = {-5.0, 1.5, 89.5};
   bladeTip     = {-7.7, 62.9, 88.7};
   
-  for (int i = 0; i < 307; i++) {
+  for (int i = 0; i < 306; i++) {
     for (int j = 0; j < dimensions; j++) {
     // interpolate position in x, y and z
       nodePosition[j] = bladeRoot[j] + (bladeTip[j] - bladeRoot[j]) * (i/307);
       vertices.at(j + dimensions * i)  = nodePosition[j];
       readData.at(j + dimensions * i)  = i; // dont care about read data
-      
       if (j==0)
       {
         writeData.at(j + dimensions * i) = 9.0; //horizontal wind speed
@@ -77,7 +76,7 @@ int main(int argc, char **argv)
   bladeRoot    = {-5.0, -0.7, 90.8};
   bladeTip     = {-7.7, -30.5, 144.4};
   
-  for (int i = 307; i < 614; i++) {
+  for (int i = 306; i < 615; i++) {
     for (int j = 0; j < dimensions; j++) {
       nodePosition[j] = bladeRoot[j] + (bladeTip[j] - bladeRoot[j]) * ((i-307)/307);
       vertices.at(j + dimensions * i)  = nodePosition[j];
@@ -96,7 +95,7 @@ int main(int argc, char **argv)
   bladeRoot    = {-5.0, -0.7, 88.2};
   bladeTip     = {-7.7, -32.1, 35.4};
   
-  for (int i = 614; i < 921; i++) {
+  for (int i = 615; i < 921; i++) {
     for (int j = 0; j < dimensions; j++) {
       nodePosition[j] = bladeRoot[j] + (bladeTip[j] - bladeRoot[j]) * ((i-614)/307);
       vertices.at(j + dimensions * i)  = nodePosition[j];
@@ -113,6 +112,15 @@ int main(int argc, char **argv)
   interface.setMeshVertices(meshID, numberOfVertices, vertices.data(), vertexIDs.data());
 
   double dt = interface.initialize();
+  
+  if (interface.isActionRequired(actionWriteInitialData())) {
+      interface.writeBlockVectorData(writeDataID, numberOfVertices, vertexIDs.data(), writeData.data());    
+      interface.markActionFulfilled(actionWriteInitialData());
+  }
+  
+  interface.initializeData();
+  
+  std::cout << "Force in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
 
   while (interface.isCouplingOngoing()) {
 
@@ -124,10 +132,7 @@ int main(int argc, char **argv)
     if (interface.isReadDataAvailable()) {
       interface.readBlockVectorData(readDataID, numberOfVertices, vertexIDs.data(), readData.data());
     }
-
-    //for (int i = 0; i < numberOfVertices * dimensions; i++) {
-    //  writeData.at(i) = readData.at(i) + 1;
-    // }
+    std::cout << "Force in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
     
     if (interface.isWriteDataRequired(dt)) {
       interface.writeBlockVectorData(writeDataID, numberOfVertices, vertexIDs.data(), writeData.data());
