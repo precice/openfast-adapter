@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  std::cout << "Running fluid solver with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
+  std::cout << "Running dummy fluid solver with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
 
   solverName    = "Fluid";
   dataWriteName = "Velocity";
@@ -50,6 +50,10 @@ int main(int argc, char **argv)
   std::vector<double> nodePosition(3);
   std::vector<double> bladeRoot(3);
   std::vector<double> bladeTip(3);
+  std::vector<double> windSpeed(3);
+  
+  // set initial wind speed (u, v, w)
+  windSpeed = {9, 0, 0};
   
   // Blade 1
   std::cout << "Meshing blade 1 \n";
@@ -61,13 +65,7 @@ int main(int argc, char **argv)
     // interpolate position in x, y and z
       nodePosition[j] = bladeRoot[j] + (bladeTip[j] - bladeRoot[j]) * (i/307);
       vertices.at(j + dimensions * i)  = nodePosition[j];
-      readData.at(j + dimensions * i)  = i; // dont care about read data
-      if (j==0)
-      {
-        writeData.at(j + dimensions * i) = 9.0; //horizontal wind speed
-      } else {
-        writeData.at(j + dimensions * i) = 0.0;
-      }
+      writeData.at(j + dimensions * i) = windSpeed[j];
     }
   }
   
@@ -80,13 +78,7 @@ int main(int argc, char **argv)
     for (int j = 0; j < dimensions; j++) {
       nodePosition[j] = bladeRoot[j] + (bladeTip[j] - bladeRoot[j]) * ((i-307)/307);
       vertices.at(j + dimensions * i)  = nodePosition[j];
-      readData.at(j + dimensions * i)  = i; // dont care about read data
-      if (j==0)
-      {
-        writeData.at(j + dimensions * i) = 9.0; //horizontal wind speed
-      } else {
-        writeData.at(j + dimensions * i) = 0.0;
-      }
+      writeData.at(j + dimensions * i) = windSpeed[j];
     }
   }
   
@@ -99,13 +91,7 @@ int main(int argc, char **argv)
     for (int j = 0; j < dimensions; j++) {
       nodePosition[j] = bladeRoot[j] + (bladeTip[j] - bladeRoot[j]) * ((i-614)/307);
       vertices.at(j + dimensions * i)  = nodePosition[j];
-      readData.at(j + dimensions * i)  = i; // dont care about read data
-      if (j==0)
-      {
-        writeData.at(j + dimensions * i) = 9.0; //horizontal wind speed
-      } else {
-        writeData.at(j + dimensions * i) = 0.0;
-      }
+      writeData.at(j + dimensions * i) = windSpeed[j];
     }
   }
 
@@ -121,7 +107,7 @@ int main(int argc, char **argv)
   interface.initializeData();
   
   std::cout << "Force in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
-
+  
   while (interface.isCouplingOngoing()) {
 
     if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
