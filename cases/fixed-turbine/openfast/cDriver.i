@@ -35,19 +35,3 @@ Turbine0:
   FAST_input_filename: "../../../input/nrel5mw_openbc/nrel_5mw.fst"
   #A unique turbine id for each turbine
   turb_id:  0
-
-Turbine1:
-  turbine_base_pos: [ 0.0, 0.0, 0.0 ]
-  num_force_pts_blade: 1
-  num_force_pts_tower: 1
-  restart_filename: "banana"
-  FAST_input_filename: "../../nrel5mw/nrel5mw-onshore.fst"
-  turb_id:  1
-
-Turbine2:
-  turbine_base_pos: [ 0.0, 0.0, 0.0 ]
-  num_force_pts_blade: 1
-  num_force_pts_tower: 1
-  restart_filename: "banana"
-  FAST_input_filename: "../../nrel5mw/nrel5mw-onshore.fst"
-  turb_id:  2
