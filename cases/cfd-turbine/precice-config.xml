@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      type="stream"
+      output="stdout"
+      filter="%Severity% > debug"
+      format="preCICE:%ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+  
+  <data:vector name="Force" />
+  <data:vector name="Velocity" />
+    
+
+    <mesh name="Solid-Mesh-Force" dimensions="3">
+      <use-data name="Force" />
+      <use-data name="Velocity" />
+    </mesh>
+    
+    <mesh name="Solid-Mesh-Velocity" dimensions="3">
+      <use-data name="Force" />
+      <use-data name="Velocity" />
+    </mesh>
+
+    <mesh name="Fluid-Mesh" dimensions="3">
+      <use-data name="Force" />
+      <use-data name="Velocity" />
+    </mesh>
+
+    <participant name="Solid">
+      <provide-mesh name="Solid-Mesh-Force" />
+      <provide-mesh name="Solid-Mesh-Velocity" />
+      <write-data name="Force" mesh="Solid-Mesh-Force" />
+      <read-data name="Velocity" mesh="Solid-Mesh-Velocity" />
+    </participant>
+
+    <participant name="Fluid">
+      <receive-mesh name="Solid-Mesh-Force" from="Solid" />
+      <receive-mesh name="Solid-Mesh-Velocity" from="Solid" />
+      <provide-mesh name="Fluid-Mesh" />
+      <mapping:nearest-neighbor
+        direction="write"
+        from="Fluid-Mesh"
+        to="Solid-Mesh-Velocity"
+        constraint="consistent" />
+      <mapping:nearest-neighbor
+        direction="read"
+        from="Solid-Mesh-Force"
+        to="Fluid-Mesh"
+        constraint="consistent" /> <!--check again for real simulations, energy is currently not conserved -->
+      <write-data name="Velocity" mesh="Fluid-Mesh" />
+      <read-data name="Force" mesh="Fluid-Mesh" />
+    </participant>
+
+    <m2n:sockets acceptor="Solid" connector="Fluid" exchange-directory=".."/>
+
+    <coupling-scheme:serial-explicit>
+      <participants first="Solid" second="Fluid" />
+      <max-time value="0.05" />
+      <time-window-size value="0.001" />
+      <exchange data="Force" mesh="Solid-Mesh-Force" from="Solid" to="Fluid" />
+      <exchange data="Velocity" mesh="Solid-Mesh-Velocity" from="Fluid" to="Solid" initialize="1"/>
+    </coupling-scheme:serial-explicit>
+
+</precice-configuration>

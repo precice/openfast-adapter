@@ -1,0 +1,15 @@
+rm -r ../../../input/nrel5mw_openbc/*.chkp
+rm -r ../../../input/nrel5mw_openbc/*.outb
+rm -r ../../../input/nrel5mw_openbc/*.out
+rm -r ../../../input/nrel5mw_openbc/*.sum
+rm -r ../../../input/nrel5mw_openbc/*.ech
+rm -r ./*.h5
+rm -r ./*.bak
+rm -r ./turbineAlloc.0.txt
+rm -r ./Makefile
+rm -r ./CMakeFiles
+rm -r ./*.cmake
+rm -r ./CMakeCache.txt
+rm -r ./*.log
+rm -r ./*.json
+rm -r ./coupled-openfast

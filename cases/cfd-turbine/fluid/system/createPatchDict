@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                      |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                       |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createPatchDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+
+patches
+{
+    // Specify the cell set you want to convert to a patch
+    cellSet
+    {   
+         name        turbine;  // Replace with the name of your cell set
+      operation   complement;
+    }
+
+    // Specify the new patch
+    patchInfo
+    {
+        type patch;  // Choose the type of patch you want (e.g., wall, patch, etc.)
+        name turbinePatch;  // Replace with the desired name for the new patch
+    }
+}
+// ************************************************************************* //
+
