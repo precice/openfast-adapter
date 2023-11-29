@@ -13,3 +13,4 @@ rm -r ./CMakeCache.txt
 rm -r ./*.log
 rm -r ./*.json
 rm -r ./coupled-openfast
+rm -r ./precice-profiling

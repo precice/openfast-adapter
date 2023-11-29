@@ -74,7 +74,10 @@ void readInputFile(fast::fastInputs & fi, std::string cInterfaceInputFile, doubl
             *tEnd = cDriverInp["tEnd"].as<double>();
             fi.nEveryCheckPoint = cDriverInp["nEveryCheckPoint"].as<int>();
             fi.dtFAST = cDriverInp["dtFAST"].as<double>();
-            fi.tMax = cDriverInp["tMax"].as<double>(); // tMax is the total duration to which you want to run FAST. This should be the same or greater than the max time given in the FAST fst file. Choose this carefully as FAST writes the output file only at this point if you choose the binary file output.
+            fi.tMax = cDriverInp["tMax"].as<double>(); 
+            // tMax is the total duration to which you want to run FAST.
+            // This should be the same or greater than the max time given in the FAST fst file.
+            // Choose this carefully as FAST writes the output file only at this point if you choose the binary file output.
 
             if(cDriverInp["superController"]) {
                 fi.scStatus = cDriverInp["superController"].as<bool>();
