@@ -29,7 +29,7 @@ turbine
         origin              (0 0 0);
         axis                (-1 0 0);
         verticalDirection   (0 0 1);
-        freeStreamVelocity  (10 0 0); //10 0 0
+        freeStreamVelocity  (5 0 0); //10 0 0
         tipSpeedRatio       6.0; //6.0 
         rotorRadius         0.45;
 

@@ -9,34 +9,34 @@
       enabled="true" />
   </log>
   
-  <data:vector name="Force" />
+  <data:vector name="Pressure" />
   <data:vector name="Velocity" />
     
 
-    <mesh name="Solid-Mesh-Force" dimensions="3">
-      <use-data name="Force" />
+    <mesh name="Solid-Mesh-Pressure" dimensions="3">
+      <use-data name="Pressure" />
       <use-data name="Velocity" />
     </mesh>
     
     <mesh name="Solid-Mesh-Velocity" dimensions="3">
-      <use-data name="Force" />
+      <use-data name="Pressure" />
       <use-data name="Velocity" />
     </mesh>
 
     <mesh name="Fluid-Mesh" dimensions="3">
-      <use-data name="Force" />
+      <use-data name="Pressure" />
       <use-data name="Velocity" />
     </mesh>
 
     <participant name="Solid">
-      <provide-mesh name="Solid-Mesh-Force" />
+      <provide-mesh name="Solid-Mesh-Pressure" />
       <provide-mesh name="Solid-Mesh-Velocity" />
-      <write-data name="Force" mesh="Solid-Mesh-Force" />
+      <write-data name="Pressure" mesh="Solid-Mesh-Pressure" />
       <read-data name="Velocity" mesh="Solid-Mesh-Velocity" />
     </participant>
 
     <participant name="Fluid">
-      <receive-mesh name="Solid-Mesh-Force" from="Solid" />
+      <receive-mesh name="Solid-Mesh-Pressure" from="Solid" />
       <receive-mesh name="Solid-Mesh-Velocity" from="Solid" />
       <provide-mesh name="Fluid-Mesh" />
       <mapping:nearest-neighbor
@@ -46,11 +46,11 @@
         constraint="consistent" />
       <mapping:nearest-neighbor
         direction="read"
-        from="Solid-Mesh-Force"
+        from="Solid-Mesh-Pressure"
         to="Fluid-Mesh"
         constraint="consistent" /> <!--check again for real simulations, energy is currently not conserved -->
       <write-data name="Velocity" mesh="Fluid-Mesh" />
-      <read-data name="Force" mesh="Fluid-Mesh" />
+      <read-data name="Pressure" mesh="Fluid-Mesh" />
     </participant>
 
     <m2n:sockets acceptor="Solid" connector="Fluid" exchange-directory=".."/>
@@ -59,7 +59,7 @@
       <participants first="Solid" second="Fluid" />
       <max-time value="0.05" />
       <time-window-size value="0.001" />
-      <exchange data="Force" mesh="Solid-Mesh-Force" from="Solid" to="Fluid" />
+      <exchange data="Pressure" mesh="Solid-Mesh-Pressure" from="Solid" to="Fluid" />
       <exchange data="Velocity" mesh="Solid-Mesh-Velocity" from="Fluid" to="Solid" initialize="1"/>
     </coupling-scheme:serial-explicit>
 

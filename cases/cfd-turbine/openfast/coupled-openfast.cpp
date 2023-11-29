@@ -171,9 +171,9 @@ int main(int argc, char** argv) {
     
     std::string solverName      = "Solid";
     std::string meshReadName    = "Solid-Mesh-Velocity";
-    std::string meshWriteName   = "Solid-Mesh-Force";
+    std::string meshWriteName   = "Solid-Mesh-Pressure";
     std::string dataReadName    = "Velocity";
-    std::string dataWriteName   = "Force";
+    std::string dataWriteName   = "Pressure";
 
     std::cout << "Running OpenFAST dummy with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
 
@@ -206,7 +206,7 @@ int main(int argc, char** argv) {
         verticesForce.at(j + dimensions * i)  = coords[j];
         // force
         FAST.getForce(force, i, iTurb);
-        writeData.at(j + dimensions * i) = 10;//force[j];
+        writeData.at(j + dimensions * i) = force[j];
       }
     }
     
