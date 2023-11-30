@@ -32,6 +32,6 @@ Turbine0:
   #The checkpoint file for this turbine when restarting a simulation
   restart_filename: "banana"
   #The FAST input file for this turbine
-  FAST_input_filename: "../../../input/nrel5mw_openbc/nrel_5mw.fst"
+  FAST_input_filename: "../../../input/nrel5mw/nrel_5mw.fst"
   #A unique turbine id for each turbine
   turb_id:  0

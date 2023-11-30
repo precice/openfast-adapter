@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
-#include "/usr/include/precice/SolverInterface.hpp"
+#include "precice/precice.hpp"
+#include <vector>
 
 int main(int argc, char **argv)
 {
@@ -8,7 +9,6 @@ int main(int argc, char **argv)
   int commSize = 1;
 
   using namespace precice;
-  using namespace precice::constants;
 
   std::string configFileName(argv[1]);
   std::string solverName;
@@ -29,16 +29,12 @@ int main(int argc, char **argv)
   dataWriteName = "Velocity";
   dataReadName  = "Force";   
   meshName      = "Fluid-Mesh";
-    
-  SolverInterface interface(solverName, configFileName, commRank, commSize);
+  
+  Participant participant(solverName, configFileName, commRank, commSize);
 
 
-  int meshID           = interface.getMeshID(meshName);
-  int dimensions       = interface.getDimensions();
+  int dimensions       = participant.getMeshDimensions(meshName);
   int numberOfVertices = 921; // Number of velocity nodes in OpenFAST - 0: hub node 1-922: blade nodes 923: tower base node --> use only blade nodes
-
-  const int readDataID  = interface.getDataID(dataReadName, meshID);
-  const int writeDataID = interface.getDataID(dataWriteName, meshID);
 
   std::vector<double> readData(numberOfVertices * dimensions);
   std::vector<double> writeData(numberOfVertices * dimensions);
@@ -95,46 +91,47 @@ int main(int argc, char **argv)
     }
   }
 
-  interface.setMeshVertices(meshID, numberOfVertices, vertices.data(), vertexIDs.data());
+  participant.setMeshVertices(meshName, vertices, vertexIDs);
+  
+  if (participant.requiresInitialData()) {
+        participant.writeData(meshName, dataWriteName, vertexIDs, writeData);    
+    }
 
-  double dt = interface.initialize();
+  participant.initialize();
   
-  if (interface.isActionRequired(actionWriteInitialData())) {
-      interface.writeBlockVectorData(writeDataID, numberOfVertices, vertexIDs.data(), writeData.data());    
-      interface.markActionFulfilled(actionWriteInitialData());
-  }
-  
-  interface.initializeData();
+  double time = 0.0;
+  double dt = participant.getMaxTimeStepSize();
   
   std::cout << "Force in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
   
-  while (interface.isCouplingOngoing()) {
+  while (participant.isCouplingOngoing()) {
 
-    if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
-      std::cout << "DUMMY: Writing iteration checkpoint\n";
-      interface.markActionFulfilled(actionWriteIterationCheckpoint());
+    if (participant.requiresWritingCheckpoint()) {
+        std::cout << "Dummy: Writing iteration checkpoint\n";
+        // Not implemented
     }
 
-    if (interface.isReadDataAvailable()) {
-      interface.readBlockVectorData(readDataID, numberOfVertices, vertexIDs.data(), readData.data());
-    }
+    // read data
+    participant.readData(meshName, dataReadName, vertexIDs, dt, readData);    
+    
     std::cout << "Force in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
     
-    if (interface.isWriteDataRequired(dt)) {
-      interface.writeBlockVectorData(writeDataID, numberOfVertices, vertexIDs.data(), writeData.data());
-    }
+    // write data
+    participant.writeData(meshName, dataWriteName, vertexIDs, writeData);
 
-    dt = interface.advance(dt);
+    // advance the simulation
+    participant.advance(dt);
 
-    if (interface.isActionRequired(actionReadIterationCheckpoint())) {
-      std::cout << "DUMMY: Reading iteration checkpoint\n";
-      interface.markActionFulfilled(actionReadIterationCheckpoint());
+    if (participant.requiresWritingCheckpoint()) {
+        std::cout << "Dummy: Reading iteration checkpoint\n";
+        // Not implemented
     } else {
-      std::cout << "Advancing in time\n";
+        std::cout << "Advancing in time\n";
+        time = time + dt;
     }
   }
 
-  interface.finalize();
+  participant.finalize();
   std::cout << "Closing C++ fluid solver ...\n";
 
   return 0;

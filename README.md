@@ -16,8 +16,6 @@ Source: [OpenFAST documentation](https://ganesh-openfast.readthedocs.io/en/lates
 - [preCICE-OpenFOAM](https://precice.org/adapter-openfoam-get.html) adapter by installation from source from the [develop](https://github.com/precice/openfoam-adapter) branch
 - [turbinesFoam](https://github.com/turbinesFoam/turbinesFoam), an OpenFOAM library to simulate wind turbines using the actuator-line method
 
-**Note: Update case fixed-turbine to preCICE v3 before merge**
-
 ## Run a simulation
 
 - Clone the repository

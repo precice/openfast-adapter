@@ -18,7 +18,7 @@ tEnd:    4.0
 #Max time of the simulation
 tMax:    4.0
 #Time step for FAST. This has to match the time step given in the .fst file!
-dtFAST:  0.00625
+dtFAST:  0.001
 #Restart files will be written every so many time steps
 nEveryCheckPoint: 160
 
@@ -32,6 +32,6 @@ Turbine0:
   #The checkpoint file for this turbine when restarting a simulation
   restart_filename: "banana"
   #The FAST input file for this turbine
-  FAST_input_filename: "../../../input/nrel5mw_openbc/nrel_5mw.fst"
+  FAST_input_filename: "../../../input/nrel5mw/nrel_5mw.fst"
   #A unique turbine id for each turbine
   turb_id:  0

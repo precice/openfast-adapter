@@ -5,7 +5,7 @@ This case couples a single NREL5MW turbine with a fixed rotor to a dummy fluid s
 ## Available solvers
 
 - *openfast*: A first coupled code `coupled-openfast`, which calls both the preCICE and OpenFAST API. The input file `cDriver.i` specifies the OpenFAST `.fst` file and some simulation metadata.
-- *fluid*: An example fluid solver which creates a dummy mesh, writes velocity data on it and reads force data from OpenFAST
+- *fluid*: A dummy participant `fluid-solver` which creates a mesh, writes velocity data on it and reads force data from OpenFAST
 
 ## Compiling the code
 

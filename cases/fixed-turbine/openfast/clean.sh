@@ -1,8 +1,9 @@
-rm -r ../../../input/nrel5mw_openbc/*.chkp
-rm -r ../../../input/nrel5mw_openbc/*.outb
-rm -r ../../../input/nrel5mw_openbc/*.out
-rm -r ../../../input/nrel5mw_openbc/*.sum
-rm -r ../../../input/nrel5mw_openbc/*.ech
+rm -r ../../../input/nrel5mw/*.chkp
+rm -r ../../../input/nrel5mw/*.outb
+rm -r ../../../input/nrel5mw/*.out
+rm -r ../../../input/nrel5mw/*.sum
+rm -r ../../../input/nrel5mw/*.ech
+rm -r ../../../input/nrel5mw/vtk
 rm -r ./*.h5
 rm -r ./*.bak
 rm -r ./turbineAlloc.0.txt
@@ -13,3 +14,4 @@ rm -r ./CMakeCache.txt
 rm -r ./*.log
 rm -r ./*.json
 rm -r ./coupled-openfast
+rm -r ./precice-profiling

@@ -9,3 +9,4 @@ rm -r ./fluid-solver
 rm -r ./CMakeFiles
 rm -r ./Makefile
 rm -r ./test.cmake
+rm -r ./precice-profiling

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <mpi.h> 
 #include <sstream>
-#include "/usr/include/precice/SolverInterface.hpp"
+#include "precice/precice.hpp"
 
 
 // --------------- Helper functions to read input files for OpenFAST -----------------------
@@ -74,7 +74,10 @@ void readInputFile(fast::fastInputs & fi, std::string cInterfaceInputFile, doubl
             *tEnd = cDriverInp["tEnd"].as<double>();
             fi.nEveryCheckPoint = cDriverInp["nEveryCheckPoint"].as<int>();
             fi.dtFAST = cDriverInp["dtFAST"].as<double>();
-            fi.tMax = cDriverInp["tMax"].as<double>(); // tMax is the total duration to which you want to run FAST. This should be the same or greater than the max time given in the FAST fst file. Choose this carefully as FAST writes the output file only at this point if you choose the binary file output.
+            fi.tMax = cDriverInp["tMax"].as<double>(); 
+            // tMax is the total duration to which you want to run FAST.
+            // This should be the same or greater than the max time given in the FAST fst file.
+            // Choose this carefully as FAST writes the output file only at this point if you choose the binary file output.
 
             if(cDriverInp["superController"]) {
                 fi.scStatus = cDriverInp["superController"].as<bool>();
@@ -160,7 +163,6 @@ int main(int argc, char** argv) {
     // --------------- Initialize preCICE ------------------------------------------------------
 
     using namespace precice;
-    using namespace precice::constants;
     
     int commRank = 0;
     int commSize = 1;
@@ -175,18 +177,13 @@ int main(int argc, char** argv) {
 
     std::cout << "Running OpenFAST dummy with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
 
-    SolverInterface interface(solverName, configFileName, commRank, commSize);
+    Participant participant(solverName, configFileName, commRank, commSize);
     
     // --------------- Set up the meshes ------------------------------------------------------
 
-    int meshReadID              = interface.getMeshID(meshReadName);
-    int meshWriteID             = interface.getMeshID(meshWriteName);
-    int dimensions              = interface.getDimensions();
+    int dimensions              = participant.getMeshDimensions(meshReadName);
     int numberOfForceVertices   = FAST.get_numForcePts(iTurb);
     int numberOfVelVertices     = FAST.get_numVelPts(iTurb);
-
-    const int readDataID        = interface.getDataID(dataReadName, meshReadID);
-    const int writeDataID       = interface.getDataID(dataWriteName, meshWriteID);
 
     std::vector<double> readData(numberOfVelVertices * dimensions);
     std::vector<double> writeData(numberOfForceVertices * dimensions);
@@ -209,7 +206,7 @@ int main(int argc, char** argv) {
         verticesForce.at(j + dimensions * i)  = coords[j];
         // force
         FAST.getForce(force, i, iTurb);
-        writeData.at(j + dimensions * i) = 10;//force[j];
+        writeData.at(j + dimensions * i) = force[j];
       }
     }
     
@@ -224,37 +221,33 @@ int main(int argc, char** argv) {
       }
     }
 
-    interface.setMeshVertices(meshWriteID, numberOfForceVertices, verticesForce.data(), vertexWriteIDs.data());
-    interface.setMeshVertices(meshReadID, numberOfVelVertices, verticesVel.data(), vertexReadIDs.data());
-
-    double dt = interface.initialize();
+    participant.setMeshVertices(meshWriteName, verticesForce, vertexWriteIDs);
+    participant.setMeshVertices(meshReadName, verticesVel, vertexReadIDs);
     
-    if (interface.isActionRequired(actionWriteInitialData())) {
-        interface.writeBlockVectorData(writeDataID, numberOfForceVertices, vertexWriteIDs.data(), writeData.data());    
-        interface.markActionFulfilled(actionWriteInitialData());
+    if (participant.requiresInitialData()) {
+        participant.writeData(meshWriteName, dataWriteName, vertexWriteIDs, writeData);    
     }
     
-    interface.initializeData();
+    participant.initialize();
     
     std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
     
     double time = 0.0;
+    double dt = participant.getMaxTimeStepSize();
 
     
     // --------------- Main loop ------------------------------------------------------
-    while (interface.isCouplingOngoing()) {
+    while (participant.isCouplingOngoing()) {
 
-        if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
+        if (participant.requiresWritingCheckpoint()) {
           std::cout << "Dummy: Writing iteration checkpoint\n";
           time_cp = time;
-          interface.markActionFulfilled(actionWriteIterationCheckpoint());
         }
         
         
         // read data from Fluid
-        if (interface.isReadDataAvailable()) {
-          interface.readBlockVectorData(readDataID, numberOfVelVertices, vertexReadIDs.data(), readData.data());
-        }
+        
+        participant.readData(meshReadName, dataReadName, vertexReadIDs, dt, readData);
         std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
         
         // set data in FAST
@@ -283,17 +276,16 @@ int main(int argc, char** argv) {
         // It is possible to get the actuator node co-ordinates with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
         
         // write data
-        if (interface.isWriteDataRequired(dt)) {
-          interface.writeBlockVectorData(writeDataID, numberOfForceVertices, vertexWriteIDs.data(), writeData.data());
-        }
+        participant.writeData(meshWriteName, dataWriteName, vertexWriteIDs, writeData);
+
 
         // advance the simulation
-        dt = interface.advance(dt);
+        participant.advance(dt);
 
-        if (interface.isActionRequired(actionReadIterationCheckpoint())) {
+     if (participant.requiresWritingCheckpoint()) {
           std::cout << "Dummy: Reading iteration checkpoint\n";
           time = time_cp;
-          interface.markActionFulfilled(actionReadIterationCheckpoint());
+    
         } else {
           std::cout << "Advancing in time\n";
           time = time + dt;
@@ -302,7 +294,7 @@ int main(int argc, char** argv) {
     
     std::cerr << "Close FAST" << std::endl ;
     FAST.end() ;
-    interface.finalize();
+    participant.finalize();
 
     return 0;
 

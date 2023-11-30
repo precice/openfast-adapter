@@ -8,37 +8,37 @@
       format="preCICE:%ColorizedSeverity% %Message%"
       enabled="true" />
   </log>
+  
+  <data:vector name="Force" />
+  <data:vector name="Velocity" />
+    
 
-  <solver-interface dimensions="3">
-    <data:vector name="Force" />
-    <data:vector name="Velocity" />
-
-    <mesh name="Solid-Mesh-Force">
+    <mesh name="Solid-Mesh-Force" dimensions="3">
       <use-data name="Force" />
       <use-data name="Velocity" />
     </mesh>
     
-    <mesh name="Solid-Mesh-Velocity">
+    <mesh name="Solid-Mesh-Velocity" dimensions="3">
       <use-data name="Force" />
       <use-data name="Velocity" />
     </mesh>
 
-    <mesh name="Fluid-Mesh">
+    <mesh name="Fluid-Mesh" dimensions="3">
       <use-data name="Force" />
       <use-data name="Velocity" />
     </mesh>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Mesh-Force" provide="yes" />
-      <use-mesh name="Solid-Mesh-Velocity" provide="yes" />
+      <provide-mesh name="Solid-Mesh-Force" />
+      <provide-mesh name="Solid-Mesh-Velocity" />
       <write-data name="Force" mesh="Solid-Mesh-Force" />
       <read-data name="Velocity" mesh="Solid-Mesh-Velocity" />
     </participant>
 
     <participant name="Fluid">
-      <use-mesh name="Solid-Mesh-Force" from="Solid" />
-      <use-mesh name="Solid-Mesh-Velocity" from="Solid" />
-      <use-mesh name="Fluid-Mesh" provide="yes" />
+      <receive-mesh name="Solid-Mesh-Force" from="Solid" />
+      <receive-mesh name="Solid-Mesh-Velocity" from="Solid" />
+      <provide-mesh name="Fluid-Mesh" />
       <mapping:nearest-neighbor
         direction="write"
         from="Fluid-Mesh"
@@ -53,14 +53,14 @@
       <read-data name="Force" mesh="Fluid-Mesh" />
     </participant>
 
-    <m2n:sockets from="Solid" to="Fluid" exchange-directory=".."/>
+    <m2n:sockets acceptor="Solid" connector="Fluid" exchange-directory=".."/>
 
     <coupling-scheme:serial-explicit>
       <participants first="Solid" second="Fluid" />
-      <max-time value="0.1" />
-      <time-window-size value="0.01" />
+      <max-time value="0.01" />
+      <time-window-size value="0.001" />
       <exchange data="Force" mesh="Solid-Mesh-Force" from="Solid" to="Fluid" />
       <exchange data="Velocity" mesh="Solid-Mesh-Velocity" from="Fluid" to="Solid" initialize="1"/>
     </coupling-scheme:serial-explicit>
-  </solver-interface>
+
 </precice-configuration>
