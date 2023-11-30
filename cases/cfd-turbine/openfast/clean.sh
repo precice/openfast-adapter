@@ -3,6 +3,7 @@ rm -r ../../../input/nrel5mw_openbc/*.outb
 rm -r ../../../input/nrel5mw_openbc/*.out
 rm -r ../../../input/nrel5mw_openbc/*.sum
 rm -r ../../../input/nrel5mw_openbc/*.ech
+rm -r ../../../input/nrel5mw_openbc/vtk
 rm -r ./*.h5
 rm -r ./*.bak
 rm -r ./turbineAlloc.0.txt
