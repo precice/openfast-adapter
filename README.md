@@ -12,6 +12,7 @@ Source: [OpenFAST documentation](https://ganesh-openfast.readthedocs.io/en/lates
 ## Dependencies
 
 - [OpenFAST v3.5.0](https://openfast.readthedocs.io/en/main/source/install/index.html)
+- [OpenFOAM v2206](https://www.openfoam.com/news/main-news/openfoam-v2206)
 - [preCICE v3.0.0](https://precice.org/installation-overview.html) by installation from source from the [develop](https://github.com/precice/precice) branch
 - [preCICE-OpenFOAM](https://precice.org/adapter-openfoam-get.html) adapter by installation from source from the [develop](https://github.com/precice/openfoam-adapter) branch
 - [turbinesFoam](https://github.com/turbinesFoam/turbinesFoam), an OpenFOAM library to simulate wind turbines using the actuator-line method
