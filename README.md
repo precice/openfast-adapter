@@ -38,7 +38,7 @@ cd openfast-adapter/src
 We use **cmake** for the compilation by invoking a make script:
 
 ```bash
-.Allmake
+bash Allmake
 ```
 
 The adapter is built locally in the `bin` folder. To make it accessible on the whole system, you need to export the installation path after compilation.
