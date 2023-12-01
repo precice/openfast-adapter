@@ -1,9 +1,9 @@
-rm -r ../../../input/nrel5mw/*.chkp
-rm -r ../../../input/nrel5mw/*.outb
-rm -r ../../../input/nrel5mw/*.out
-rm -r ../../../input/nrel5mw/*.sum
-rm -r ../../../input/nrel5mw/*.ech
-rm -r ../../../input/nrel5mw/vtk
+rm -r ./nrel5mw/*.chkp
+rm -r ./nrel5mw/*.outb
+rm -r ./nrel5mw/*.out
+rm -r ./nrel5mw/*.sum
+rm -r ./nrel5mw/*.ech
+rm -r ./nrel5mw/vtk
 rm -r ./*.h5
 rm -r ./*.bak
 rm -r ./turbineAlloc.0.txt

@@ -131,7 +131,7 @@ turbine
             {
                 data 
                 (
-                    #include "../../../../input/foilData/S826_1e5_Ostavan"
+                    #include "./foilData/S826_1e5_Ostavan"
                 );
             }
             cylinder

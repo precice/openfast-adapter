@@ -11,16 +11,6 @@ An open challenge is the mapping between the volume-based cellSet `turbine` in O
 - *openfast*: A first coupled code `coupled-openfast`, which calls both the preCICE and OpenFAST API. The input file `cDriver.i` specifies the OpenFAST `.fst` file and some simulation metadata.
 - *fluid*: A OpenFOAM simulation of the flow field. The turbine is represented via the actuator-line method with the OpenFOAM library `turbinesFoam`.
 
-## Preparing the simulation
-
-To compile `coupled-openfast` with `cmake`, open a terminal and run:
-
-```bash
-cd openfast
-cmake .
-make
-```
-
 ## Running the Simulation
 
 Open two separate terminals and start both participants by calling:

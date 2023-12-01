@@ -19,10 +19,49 @@ Source: [OpenFAST documentation](https://ganesh-openfast.readthedocs.io/en/lates
 
 ## Run a simulation
 
-- Clone the repository
-- Select a [simulation case](https://github.com/LeonardWilleke/openfast-adapter/cases)
-- Check the [input files](https://github.com/LeonardWilleke/openfast-adapter/input)
+- Install the adapter
+- Select a [simulation case](https://github.com/LeonardWilleke/openfast-adapter/tree/main/cases)
 - Compile the necessary scripts
 - Run the coupled simulation
 
 Instructions on how to compile the files and run the simulation are given in each case.
+
+## Installation
+
+Clone the repository and switch to the source directory:
+
+```bash
+git clone https://github.com/LeonardWilleke/openfast-adapter.git
+cd openfast-adapter/src
+```
+
+We use **cmake** for the compilation by invoking a make script:
+
+```bash
+.Allmake
+```
+
+The adapter is built locally in the `bin` folder. To make it accessible on the whole system, you need to export the installation path after compilation.
+
+Open the `.bashrc` file
+
+```bash
+cd ~
+nano .bashrc
+```
+
+and add the following line:
+
+```bash
+export PATH={path_to_repository}/openfast-adapter/bin:$PATH
+```
+
+Now run
+
+```bash
+source .basrhc
+```
+
+and restart your terminal.
+
+You're good to go! If you want to re-compile the adapter, make sure to clean the old installation first by running `src/Allclean`.

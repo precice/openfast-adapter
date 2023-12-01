@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-./coupled-openfast ../precice-config.xml cDriver.i
+coupled-openfast preciceInput.i cDriver.i

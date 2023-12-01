@@ -10,6 +10,8 @@
 #include <mpi.h> 
 #include <sstream>
 #include "precice/precice.hpp"
+#include <map>
+#include <string>
 
 
 // --------------- Helper functions to read input files for OpenFAST -----------------------
@@ -37,7 +39,7 @@ void readTurbineData(int iTurb, fast::fastInputs & fi, YAML::Node turbNode) {
     if (turbNode["air_density"]) fi.globTurbineData[iTurb].air_density = turbNode["air_density"].as<float>();
 }
 
-void readInputFile(fast::fastInputs & fi, std::string cInterfaceInputFile, double * tEnd) {
+void readInputFileFAST(fast::fastInputs & fi, std::string cInterfaceInputFile, double * tEnd) {
 
     fi.comm = MPI_COMM_WORLD;
 
@@ -103,13 +105,25 @@ void readInputFile(fast::fastInputs & fi, std::string cInterfaceInputFile, doubl
 }
 
 
+void readInputFilePrecice(YAML::Node & preciceInp, std::string preciceInputFile) {
+
+    // Check if the input file exists and read it
+    if ( checkFileExists(preciceInputFile) ) {
+
+        preciceInp = YAML::LoadFile(preciceInputFile);
+
+    } else {
+        throw std::runtime_error("Input file " + preciceInputFile + " does not exist or I cannot access it");
+    }
+}
+
 // --------------- main function ------------------------------------------------------
 int main(int argc, char** argv) {
     if (argc != 3) {
         std::cout << "Usage: ./coupled-openfast preciceConfigFile cDriverFile\n\n";
         std::cout << "Parameter description\n";
-        std::cout << "  preciceConfigFile: Path and filename of preCICE configuration (.xml)\n";
-        std::cout << "  cDriverFile: Path and filename of OpenFAST C++ configuration (.i)\n\n\n";
+        std::cout << "  preciceInputFile: Path and filename of preCICE input file (.i)\n";
+        std::cout << "  cDriverFile: Path and filename of OpenFAST C++ configuaraton (.i)\n\n\n";
     }
     
     
@@ -128,10 +142,8 @@ int main(int argc, char** argv) {
     int iNode = 0;
     int iTurb = 0;
     
-    // preCICE initializes MPI too --> does preCICE check if MPI already running? No error so far
+    // preCICE initializes MPI too --> double initialization might cause problems
     iErr = MPI_Init(NULL,NULL);
-    //iErr = MPI_Comm_size( MPI_COMM_WORLD, &nProcs);
-    //iErr = MPI_Comm_rank( MPI_COMM_WORLD, &rank);
     
     // preCICE controls the time now
     double tEnd ; // This doesn't belong in the FAST - C++ interface 
@@ -142,15 +154,12 @@ int main(int argc, char** argv) {
     fast::OpenFAST FAST;
     fast::fastInputs fi ;
     try {
-        readInputFile(fi, cDriverInputFile, &tEnd);
+        readInputFileFAST(fi, cDriverInputFile, &tEnd);
     } catch( const std::runtime_error & ex) {
         std::cerr << ex.what() << std::endl ;
         std::cerr << "Program quitting now" << std::endl ;
         return 1;
     }
-
-    // Calculate the last time step
-    //ntEnd = tEnd/fi.dtFAST;
 
     FAST.setInputs(fi);
     FAST.allocateTurbinesToProcsSimple(); 
@@ -161,21 +170,28 @@ int main(int argc, char** argv) {
     if (FAST.isTimeZero()) FAST.solution0();
     
     // --------------- Initialize preCICE ------------------------------------------------------
-
+    
+    YAML::Node preciceInp;
+    std::string preciceInputFile = argv[1];
+    try {
+        readInputFilePrecice(preciceInp, preciceInputFile);
+    } catch( const std::runtime_error & ex) {
+        std::cerr << ex.what() << std::endl ;
+        std::cerr << "Program quitting now" << std::endl ;
+        return 1;
+    }
     using namespace precice;
     
     int commRank = 0;
     int commSize = 1;
 
-    std::string configFileName  = argv[1];
-    
-    std::string solverName      = "Solid";
-    std::string meshReadName    = "Solid-Mesh-Velocity";
-    std::string meshWriteName   = "Solid-Mesh-Pressure";
-    std::string dataReadName    = "Velocity";
-    std::string dataWriteName   = "Pressure";
-
-    std::cout << "Running OpenFAST dummy with preCICE config file \"" << configFileName << "\" and participant name \"" << solverName << "\".\n";
+    std::string configFileName  = preciceInp["preciceConfig"].as<std::string>();
+    std::string solverName      = preciceInp["solverName"].as<std::string>();
+    std::string meshReadName    = preciceInp["meshReadName"].as<std::string>();
+    std::string meshWriteName   = preciceInp["meshWriteName"].as<std::string>();
+    std::string dataReadName    = preciceInp["dataReadName"].as<std::string>();
+    std::string dataWriteName   = preciceInp["dataWriteName"].as<std::string>();
+    bool debugMode              = preciceInp["debug"].as<bool>();
 
     Participant participant(solverName, configFileName, commRank, commSize);
     
@@ -194,9 +210,6 @@ int main(int argc, char** argv) {
     
     std::vector<double> nodeVelocity(dimensions);
     std::vector<double> nodeForce(dimensions);
-    
-    std::cout << "Number of velocity nodes: " + std::to_string(numberOfVelVertices) + "\n";
-    std::cout << "Number of force nodes: " + std::to_string(numberOfForceVertices) + "\n";
     
     //Initialize force mesh with data from FAST
     for (int i = 0; i < numberOfForceVertices; i++) {
@@ -230,7 +243,12 @@ int main(int argc, char** argv) {
     
     participant.initialize();
     
-    std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
+    if (debugMode){
+        // Print data from one node to check plausability
+        std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";  
+        std::cout << "Force in node four of blade 1: " + std::to_string(writeData[9]) + "   " + std::to_string(writeData[10]) + "   " + std::to_string(writeData[11]) + "\n";
+    }
+    
     
     double time = 0.0;
     double dt = participant.getMaxTimeStepSize();
@@ -240,7 +258,7 @@ int main(int argc, char** argv) {
     while (participant.isCouplingOngoing()) {
 
         if (participant.requiresWritingCheckpoint()) {
-          std::cout << "Dummy: Writing iteration checkpoint\n";
+          std::cout << "Not implemented: Writing iteration checkpoint\n";
           time_cp = time;
         }
         
@@ -248,7 +266,11 @@ int main(int argc, char** argv) {
         // read data from Fluid
         
         participant.readData(meshReadName, dataReadName, vertexReadIDs, dt, readData);
-        std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";
+        
+        if (debugMode){
+            std::cout << "Velocity in node four of blade 1: " + std::to_string(readData[9]) + "   " + std::to_string(readData[10]) + "   " + std::to_string(readData[11]) + "\n";  
+        }
+        
         
         // set data in FAST
         for (int iVertice = 0; iVertice < numberOfVelVertices; iVertice++) {
@@ -256,7 +278,6 @@ int main(int argc, char** argv) {
                 nodeVelocity[iDim] = readData.at(iDim + dimensions * iVertice);
             }
             FAST.setVelocity(nodeVelocity, iVertice, iTurb);
-
         }
    
         // calculate next time step
@@ -269,11 +290,15 @@ int main(int argc, char** argv) {
               writeData.at(iDim + dimensions * i) = nodeForce[iDim];
            }
         }
-        std::cout << "Force in node four of blade 1: " + std::to_string(writeData[9]) + "   " + std::to_string(writeData[10]) + "   " + std::to_string(writeData[11]) + "\n";
         
-        // Update positions of vertices?
+        if (debugMode){
+        std::cout << "Force in node four of blade 1: " + std::to_string(writeData[9]) + "   " + std::to_string(writeData[10]) + "   " + std::to_string(writeData[11]) + "\n"; 
+        }
+        
+        
+        // TODO: Update positions of vertices
         // It is possible to get the velocity node co-ordinates with: FAST.getVelNodeCoordinates(currentCoords, i, iTurb);
-        // It is possible to get the actuator node co-ordinates with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
+        // It is possible to get the force node co-ordinates with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
         
         // write data
         participant.writeData(meshWriteName, dataWriteName, vertexWriteIDs, writeData);
@@ -283,7 +308,7 @@ int main(int argc, char** argv) {
         participant.advance(dt);
 
      if (participant.requiresWritingCheckpoint()) {
-          std::cout << "Dummy: Reading iteration checkpoint\n";
+          std::cout << "Not implemented: Reading iteration checkpoint\n";
           time = time_cp;
     
         } else {
@@ -292,8 +317,8 @@ int main(int argc, char** argv) {
         }
     }
     
-    std::cerr << "Close FAST" << std::endl ;
-    FAST.end() ;
+    std::cerr << "Close FAST" << std::endl;
+    FAST.end();
     participant.finalize();
 
     return 0;

@@ -13,15 +13,13 @@ Note the use of 3 different meshes here: The dummy solver has one mesh, while Op
 
 ## Compiling the code
 
-To compile `coupled-openfast` with `cmake`, open a terminal and run:
+To compile `fluid-solver` with `cmake`, open a terminal and run:
 
 ```bash
-cd openfast
+cd fluid
 cmake .
 make
 ```
-
-Repeat the same procedure for the `fluid-solver`.
 
 ## Running the Simulation
 

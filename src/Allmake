@@ -1,0 +1,6 @@
+mkdir ./build
+cd build
+cmake ..
+make
+mkdir ../../bin
+cp ./coupled-openfast ../../bin/coupled-openfast
