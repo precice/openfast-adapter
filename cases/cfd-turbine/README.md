@@ -57,7 +57,7 @@ The aerodynamic effect of the single blades on the near flow field becomes visib
 OpenFAST generates VTK files to investigate the turbine mesh. The files are stored in the same folder as the `.fst` file. Starting from the `openfast` terminal, type:
 
 ```bash
-cd ../../../input/nrel5mw
+cd ./nrel5mw
 paraview
 ```
 

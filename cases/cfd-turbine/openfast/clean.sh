@@ -7,11 +7,6 @@ rm -r ./nrel5mw/vtk
 rm -r ./*.h5
 rm -r ./*.bak
 rm -r ./turbineAlloc.0.txt
-rm -r ./Makefile
-rm -r ./CMakeFiles
-rm -r ./*.cmake
-rm -r ./CMakeCache.txt
 rm -r ./*.log
 rm -r ./*.json
-rm -r ./coupled-openfast
 rm -r ./precice-profiling
