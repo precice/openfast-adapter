@@ -3,4 +3,4 @@ cd build
 cmake ..
 make
 mkdir ../../bin
-cp ./coupled-openfast ../../bin/coupled-openfast
+cp ./openfast-adapter ../../bin/openfast-adapter

@@ -120,7 +120,7 @@ void readInputFilePrecice(YAML::Node & preciceInp, std::string preciceInputFile)
 // --------------- main function ------------------------------------------------------
 int main(int argc, char** argv) {
     if (argc != 3) {
-        std::cout << "Usage: ./coupled-openfast preciceConfigFile cDriverFile\n\n";
+        std::cout << "Usage: ./openfast-adapter preciceInputFile cDriverFile\n\n";
         std::cout << "Parameter description\n";
         std::cout << "  preciceInputFile: Path and filename of preCICE input file (.i)\n";
         std::cout << "  cDriverFile: Path and filename of OpenFAST C++ configuaraton (.i)\n\n\n";

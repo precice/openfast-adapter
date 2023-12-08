@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-coupled-openfast preciceInput.i cDriver.i
+openfast-adapter preciceInput.i cDriver.i
