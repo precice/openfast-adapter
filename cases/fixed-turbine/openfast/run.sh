@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-openfast-adapter preciceInput.i cDriver.i
+openfast-adapter preciceInput.yaml openfastInput.yaml

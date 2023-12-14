@@ -1,15 +1,16 @@
 // ** LICENSE NOTICE **
-// This file is based on the script "FAST_Prog.cpp" distributed with OpenFAST v3.5.0 under a Apache 2.0 license.
+// Parts of this file are based on the script "FAST_Prog.cpp" distributed with OpenFAST v3.5.0 under a Apache 2.0 license.
 // The following functions were taken from previous work: checkFileExists(), readTurbineData(), readInputFile()
 // The following functions were adapted or extended: main()
 // The original code can be found here: https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp
 
-#include "/home/leonard/Tools/openfast/install/include/OpenFAST.H"
-#include "/usr/local/include/yaml-cpp/yaml.h"
+#include "/home/leonard/Tools/openfast/install/include/OpenFAST.H" // use for local installation
+//#include <OpenFAST.H> // use for global installation
+#include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <mpi.h> 
 #include <sstream>
-#include "precice/precice.hpp"
+#include <precice/precice.hpp>
 #include <map>
 #include <string>
 
@@ -120,10 +121,10 @@ void readInputFilePrecice(YAML::Node & preciceInp, std::string preciceInputFile)
 // --------------- main function ------------------------------------------------------
 int main(int argc, char** argv) {
     if (argc != 3) {
-        std::cout << "Usage: ./openfast-adapter preciceInputFile cDriverFile\n\n";
+        std::cout << "Usage: ./openfast-adapter preciceInputFile openfastInputFile\n\n";
         std::cout << "Parameter description\n";
-        std::cout << "  preciceInputFile: Path and filename of preCICE input file (.i)\n";
-        std::cout << "  cDriverFile: Path and filename of OpenFAST C++ configuaraton (.i)\n\n\n";
+        std::cout << "  preciceInputFile: Path and filename of preCICE input file (.yaml)\n";
+        std::cout << "  openfastInputFile: Path and filename of OpenFAST C++ configuration (.yaml)\n\n\n";
     }
     
     
