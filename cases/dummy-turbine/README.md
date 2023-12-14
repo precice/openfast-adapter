@@ -8,7 +8,7 @@ Note the use of 3 different meshes here: The dummy solver has one mesh, while Op
 
 ## Available solvers
 
-- *openfast*: A first coupled code `coupled-openfast`, which calls both the preCICE and OpenFAST API. The input file `cDriver.i` specifies the OpenFAST `.fst` file and some simulation metadata.
+- *openfast*: OpenFAST engineering tool called and coupled by the `openfast-adapter`. The input file `openfastInput.yaml` specifies the OpenFAST `.fst` file and some simulation metadata.
 - *fluid*: A dummy participant `fluid-solver` which creates a mesh, writes velocity data on it and reads force data from OpenFAST
 
 ## Compiling the code

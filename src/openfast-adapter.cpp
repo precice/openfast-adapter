@@ -14,8 +14,7 @@
 #include <map>
 #include <string>
 
-
-// --------------- Helper functions to read input files for OpenFAST -----------------------
+// --------------- Helper functions to read input files for the adapter -----------------------
 
 inline bool checkFileExists(const std::string& name) {
     struct stat buffer;   
@@ -40,7 +39,7 @@ void readTurbineData(int iTurb, fast::fastInputs & fi, YAML::Node turbNode) {
     if (turbNode["air_density"]) fi.globTurbineData[iTurb].air_density = turbNode["air_density"].as<float>();
 }
 
-void readInputFileFAST(fast::fastInputs & fi, std::string cInterfaceInputFile, double * tEnd) {
+void readInputFileFAST(fast::fastInputs & fi, std::string cInterfaceInputFile) {
 
     fi.comm = MPI_COMM_WORLD;
 
@@ -74,7 +73,6 @@ void readInputFileFAST(fast::fastInputs & fi, std::string cInterfaceInputFile, d
             }
 
             fi.tStart = cDriverInp["tStart"].as<double>();
-            *tEnd = cDriverInp["tEnd"].as<double>();
             fi.nEveryCheckPoint = cDriverInp["nEveryCheckPoint"].as<int>();
             fi.dtFAST = cDriverInp["dtFAST"].as<double>();
             fi.tMax = cDriverInp["tMax"].as<double>(); 
@@ -105,7 +103,6 @@ void readInputFileFAST(fast::fastInputs & fi, std::string cInterfaceInputFile, d
     }
 }
 
-
 void readInputFilePrecice(YAML::Node & preciceInp, std::string preciceInputFile) {
 
     // Check if the input file exists and read it
@@ -119,6 +116,7 @@ void readInputFilePrecice(YAML::Node & preciceInp, std::string preciceInputFile)
 }
 
 // --------------- main function ------------------------------------------------------
+
 int main(int argc, char** argv) {
     if (argc != 3) {
         std::cout << "Usage: ./openfast-adapter preciceInputFile openfastInputFile\n\n";
@@ -127,35 +125,27 @@ int main(int argc, char** argv) {
         std::cout << "  openfastInputFile: Path and filename of OpenFAST C++ configuration (.yaml)\n\n\n";
     }
     
-    
     // --------------- Initialize OpenFAST ------------------------------------------------------
     
     int iErr;
     int nProcs ;
     int rank;
-    std::vector<double> point (3, 0.0); 
     double time_cp;
     
     // variables for data exchange
     std::vector<double> force(3, 0.0);
     std::vector<double> coords(3);
-    std::vector<double> velocity(3, 10.0);
-    int iNode = 0;
+    std::vector<double> velocity(3, 0.0);
     int iTurb = 0;
     
     // preCICE initializes MPI too --> double initialization might cause problems
     iErr = MPI_Init(NULL,NULL);
-    
-    // preCICE controls the time now
-    double tEnd ; // This doesn't belong in the FAST - C++ interface 
-    //int ntEnd ; // This doesn't belong in the FAST - C++ interface
-    
 
     std::string cDriverInputFile=argv[2];
     fast::OpenFAST FAST;
     fast::fastInputs fi ;
     try {
-        readInputFileFAST(fi, cDriverInputFile, &tEnd);
+        readInputFileFAST(fi, cDriverInputFile);
     } catch( const std::runtime_error & ex) {
         std::cerr << ex.what() << std::endl ;
         std::cerr << "Program quitting now" << std::endl ;
@@ -230,7 +220,7 @@ int main(int argc, char** argv) {
         // positions
         FAST.getVelNodeCoordinates(coords, i, iTurb);
         verticesVel.at(j + dimensions * i)  = coords[j];
-        // velocity - How to initialize? Data should come from Fluid Participant. Initialize via preCICE, but probably later in the code
+        // velocity - How to initialize? Data should come from Fluid Participant via preCICE
         readData.at(j + dimensions * i)  = 0.0; //initialize velocity manually for now
       }
     }
@@ -250,8 +240,7 @@ int main(int argc, char** argv) {
         std::cout << "Force in node four of blade 1: " + std::to_string(writeData[9]) + "   " + std::to_string(writeData[10]) + "   " + std::to_string(writeData[11]) + "\n";
     }
     
-    
-    double time = 0.0;
+    double time = fi.tStart;
     double dt = participant.getMaxTimeStepSize();
 
     
@@ -262,7 +251,6 @@ int main(int argc, char** argv) {
           std::cout << "Not implemented: Writing iteration checkpoint\n";
           time_cp = time;
         }
-        
         
         // read data from Fluid
         
@@ -296,14 +284,12 @@ int main(int argc, char** argv) {
         std::cout << "Force in node four of blade 1: " + std::to_string(writeData[9]) + "   " + std::to_string(writeData[10]) + "   " + std::to_string(writeData[11]) + "\n"; 
         }
         
-        
         // TODO: Update positions of vertices
         // It is possible to get the velocity node co-ordinates with: FAST.getVelNodeCoordinates(currentCoords, i, iTurb);
         // It is possible to get the force node co-ordinates with: FAST.getForceNodeCoordinates(currentCoords, i, iTurb);
         
         // write data
         participant.writeData(meshWriteName, dataWriteName, vertexWriteIDs, writeData);
-
 
         // advance the simulation
         participant.advance(dt);
