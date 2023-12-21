@@ -8,8 +8,15 @@ An open challenge is the mapping between the volume-based cellSet `turbine` in O
 
 ## Available solvers
 
-- *openfast*: A first coupled code `coupled-openfast`, which calls both the preCICE and OpenFAST API. The input file `cDriver.i` specifies the OpenFAST `.fst` file and some simulation metadata.
-- *fluid*: A OpenFOAM simulation of the flow field. The turbine is represented via the actuator-line method with the OpenFOAM library `turbinesFoam`.
+- *openfast*: An OpenFAST simulation of a single NREL 5MW turbine coupled to preCICE by the code `openfast-adapter`. The input files `preciceInput.yaml` and `openfastInput.yaml` specify the simulation case by pointing to other files such as `nrel5mw.fst`.
+- *fluid*: A OpenFOAM simulation of the flow field
+
+Remark: For future experiments, the OpenFOAM library [turbinesFoam](https://github.com/turbinesFoam/turbinesFoam) may be interesting to represent wind turbines using the actuator-line method. The necessary system files are included in this setup but not activated.
+
+## Additional Dependencies
+
+- [OpenFOAM v2206](https://www.openfoam.com/news/main-news/openfoam-v2206)
+- [preCICE-OpenFOAM](https://precice.org/adapter-openfoam-get.html) adapter by installation from source from the [develop](https://github.com/precice/openfoam-adapter) branch
 
 ## Running the Simulation
 
@@ -39,7 +46,7 @@ paraFoam
 
 The aerodynamic effect of the turbine on the flow field becomes visible.
 
-To visualize only the subregion where the turbine is modeled, use the commands:
+To visualize only the subregion where the turbine data from OpenFAST is applied, use the commands:
 
 ```bash
 foamToVTK -cellSet turbine
@@ -64,7 +71,3 @@ paraview
 Now use Paraview to open all files in the `vtk` subfolder. You should see the line representation of the turbine as used by the Actuator Line Method.
 
 ![OpenFAST Turbine mesh](images/openfast-turbine-mesh.png)
-
-## License and attribution
-
-Parts of this code were reused from a [OpenFAST C++ API example](https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp), which is licensed under the [Apache 2 license](https://github.com/LeonardWilleke/openfast-adapter/thirdparty/LICENSE.txt).

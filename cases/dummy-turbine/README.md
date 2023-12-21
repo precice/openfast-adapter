@@ -4,11 +4,11 @@ This case couples a single NREL5MW turbine with a fixed rotor to a dummy fluid s
 
 Note the use of 3 different meshes here: The dummy solver has one mesh, while OpenFAST uses two different meshes for Force and Velocity data. It has the capacity to map between them internally and present only the Force mesh to a coupled solver. However, we want preCICE to do this mapping for us. This results in the coupling scheme visualized in the figure below: The `solid` participant (OpenFAST) provides two meshes different meshes for the read and write data. The fluid participant provides one mesh and maps the read and write data accordingly.
 
-![Coupling scheme](images/config.pdf)
+![Coupling scheme](images/config.png)
 
 ## Available solvers
 
-- *openfast*: OpenFAST engineering tool called and coupled by the `openfast-adapter`. The input file `openfastInput.yaml` specifies the OpenFAST `.fst` file and some simulation metadata.
+- *openfast*: An OpenFAST simulation of a single NREL 5MW turbine coupled to preCICE by the code `openfast-adapter`. The input files `preciceInput.yaml` and `openfastInput.yaml` specify the simulation case by pointing to other files such as `nrel5mw.fst`.
 - *fluid*: A dummy participant `fluid-solver` which creates a mesh, writes velocity data on it and reads force data from OpenFAST
 
 ## Compiling the code
@@ -36,7 +36,3 @@ and
 cd fluid
 ./run.sh
 ```
-
-## License and attribution
-
-Parts of this code were reused from a [OpenFAST C++ API example](https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp), which is licensed under the [Apache 2 license](https://github.com/LeonardWilleke/openfast-adapter/thirdparty/LICENSE.txt).

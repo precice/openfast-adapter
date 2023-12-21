@@ -12,10 +12,7 @@ Source: [OpenFAST documentation](https://ganesh-openfast.readthedocs.io/en/lates
 ## Dependencies
 
 - [OpenFAST v3.5.0](https://openfast.readthedocs.io/en/main/source/install/index.html)
-- [OpenFOAM v2206](https://www.openfoam.com/news/main-news/openfoam-v2206)
 - [preCICE v3.0.0](https://precice.org/installation-overview.html) by installation from source from the [develop](https://github.com/precice/precice) branch
-- [preCICE-OpenFOAM](https://precice.org/adapter-openfoam-get.html) adapter by installation from source from the [develop](https://github.com/precice/openfoam-adapter) branch
-- [turbinesFoam](https://github.com/turbinesFoam/turbinesFoam), an OpenFOAM library to simulate wind turbines using the actuator-line method
 
 ## Run a simulation
 
@@ -65,3 +62,11 @@ source .basrhc
 and restart your terminal.
 
 You're good to go! If you want to re-compile the adapter, make sure to clean the old installation first by running `src/Allclean`.
+
+## References
+
+A more detailed description of the concept behind the adapter can be found in this [technical report](https://github.com/LeonardWilleke/report-openfast-adapter/tree/draft-one).
+
+## License and attribution
+
+Parts of the code in `src/openfast-adapter` were reused from a [OpenFAST C++ API example](https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp), which is licensed under the [Apache 2 license](https://github.com/LeonardWilleke/openfast-adapter/thirdparty/LICENSE.txt).

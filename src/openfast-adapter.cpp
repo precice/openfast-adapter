@@ -4,8 +4,8 @@
 // The following functions were adapted or extended: main()
 // The original code can be found here: https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp
 
-#include "/home/leonard/Tools/openfast/install/include/OpenFAST.H" // use for local installation
-//#include <OpenFAST.H> // use for global installation
+#include "/home/leonard/Tools/openfast/install/include/OpenFAST.H" // adapt file path to access local OpenFAST installation
+//#include <OpenFAST.H> // use to access global OpenFAST installation
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <mpi.h> 
