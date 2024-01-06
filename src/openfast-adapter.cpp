@@ -1,11 +1,4 @@
-// ** LICENSE NOTICE **
-// Parts of this file are based on the script "FAST_Prog.cpp" distributed with OpenFAST v3.5.0 under a Apache 2.0 license.
-// The following functions were taken from previous work: checkFileExists(), readTurbineData(), readInputFile()
-// The following functions were adapted or extended: main()
-// The original code can be found here: https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp
-
-#include "/home/leonard/Tools/openfast/install/include/OpenFAST.H" // adapt file path to access local OpenFAST installation
-//#include <OpenFAST.H> // use to access global OpenFAST installation
+#include <OpenFAST.H>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <mpi.h> 
