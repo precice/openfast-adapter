@@ -65,7 +65,7 @@ You're good to go! If you want to re-compile the adapter, make sure to clean the
 
 ## References
 
-A more detailed description of the concept behind the adapter can be found in this [technical report](https://github.com/LeonardWilleke/report-openfast-adapter/tree/draft-one).
+A more detailed description of the concept behind the adapter can be found in this [technical report](https://github.com/LeonardWilleke/report-openfast-adapter).
 
 ## License and attribution
 
