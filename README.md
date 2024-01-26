@@ -72,3 +72,7 @@ A more detailed description of the concept behind the adapter can be found in th
 ## License and attribution
 
 Parts of the code in `src/openfast-adapter` were reused from a [OpenFAST C++ API example](https://github.com/OpenFAST/openfast/tree/v3.5.0/glue-codes/openfast-cpp/src/FAST_Prog.cpp), which is licensed under the [Apache 2 license](https://github.com/LeonardWilleke/openfast-adapter/thirdparty/LICENSE.txt).
+
+# Development contribution
+
+The initial version of this adapter was developed by [Leonard Willeke]() during his research stay at Delft University of Technology in the group for [Wind Energy](https://www.tudelft.nl/en/ae/organisation/departments/flow-physics-and-technology/wind-energy) in collaboration with Evert Wiegant.
