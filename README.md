@@ -30,7 +30,7 @@ Instructions on how to compile the files and run the simulation are given in eac
 Clone the repository and switch to the source directory:
 
 ```bash
-git clone https://github.com/LeonardWilleke/openfast-adapter.git
+git clone https://github.com/precice/openfast-adapter.git
 cd openfast-adapter/src
 ```
 
@@ -67,7 +67,7 @@ You're good to go! If you want to re-compile the adapter, make sure to clean the
 
 ## References
 
-A more detailed description of the concept behind the adapter can be found in this [technical report](https://github.com/LeonardWilleke/report-openfast-adapter).
+A more detailed description of the concept behind the adapter can be found in this [report](https://pure.tudelft.nl/ws/portalfiles/portal/175757249/willeke24-openfast-adapter.pdf). Please consider citing the report if you are using the adapter.
 
 ## License and attribution
 
@@ -75,4 +75,4 @@ Parts of the code in `src/openfast-adapter` were reused from a [OpenFAST C++ API
 
 # Development contribution
 
-The initial version of this adapter was developed by [Leonard Willeke]() during his research stay at Delft University of Technology in the group for [Wind Energy](https://www.tudelft.nl/en/ae/organisation/departments/flow-physics-and-technology/wind-energy) in collaboration with Evert Wiegant.
+The initial version of this adapter was developed by [Leonard Willeke](https://github.com/LeonardWilleke) during his research stay at Delft University of Technology in the group for [Wind Energy](https://www.tudelft.nl/en/ae/organisation/departments/flow-physics-and-technology/wind-energy) in collaboration with Evert Wiegant.
