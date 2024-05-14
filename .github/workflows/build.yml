@@ -24,16 +24,18 @@ jobs:
       - name: Build OpenFAST
         run: |
           git clone https://github.com/OpenFAST/OpenFAST.git
+          pwd && ls
           cd OpenFAST
           git switch --detach v3.5.3
           mkdir build
           cd build
           cmake -DBUILD_OPENFAST_CPP_API=ON ..
-          make -j $(nproc)
-          make install
+          # make -j $(nproc)
+          # make install
       - name: Build OpenFAST adapter
         run: |
           cd src
+          pwd && ls
           mkdir build
           cd build
           OpenFAST_DIR=../OpenFAST/install/lib/cmake/OpenFAST cmake ..
