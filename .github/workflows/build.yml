@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get -qq update
-          apt-get -qq install git cmake libblas-dev liblapack-dev gfortran g++
+          apt-get -qq install git cmake libblas-dev liblapack-dev libyaml-cpp-dev gfortran g++
       - name: Build OpenFAST
         run: |
           git clone https://github.com/OpenFAST/OpenFAST.git
