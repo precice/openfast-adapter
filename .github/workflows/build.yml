@@ -28,7 +28,7 @@ jobs:
           git switch --detach v3.5.3
           mkdir build
           cd build
-          cmake ..
+          cmake -DBUILD_OPENFAST_CPP_API=ON ..
           make -j $(nproc)
           make install
       - name: Build OpenFAST adapter
