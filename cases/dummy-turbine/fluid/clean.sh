@@ -1,12 +1,15 @@
-rm -r ./*.log
-rm -r ./*.json
-rm -r ../precice-run
-rm -r ./Testing
-rm -r ./CMakeCache.txt
-rm -r ./cmake_install.cmake
-rm -r ./CTestTestfile.cmake
-rm -r ./fluid-solver
-rm -r ./CMakeFiles
-rm -r ./Makefile
-rm -r ./test.cmake
-rm -r ./precice-profiling
+#!/usr/bin/env bash
+set -e -u
+
+rm -rf ./*.log
+rm -rf ./*.json
+rm -rf ../precice-run
+rm -rf ./Testing
+rm -rf ./CMakeCache.txt
+rm -rf ./cmake_install.cmake
+rm -rf ./CTestTestfile.cmake
+rm -rf ./fluid-solver
+rm -rf ./CMakeFiles
+rm -rf ./Makefile
+rm -rf ./test.cmake
+rm -rf ./precice-profiling
