@@ -68,23 +68,6 @@ and restart your terminal.
 
 You're good to go! If you want to re-compile the adapter, make sure to clean the old installation first by running `src/Allclean`.
 
-## Known installation issues
-
-The installation may fail to detect `OpenFAST.H`, causing the installation process to end with the error message
-
-```bash
-fatal error: OpenFAST.H: No such file or directory
-    1 | #include <OpenFAST.H>
-```
-
-One solution is to change the include command in line 1 of `openfast-adapter.cpp` and provide the direct path to the `OpenFAST.H` file of your OpenFAST installation:
-
-```bash
-#include "/yourPath/openfast/install/include/OpenFAST.H"
-```
-
-While in no way perfect, this solution adresses the issue and allows to proceed with the installation.
-
 ## References
 
 A more detailed description of the concept behind the adapter can be found in this [report](https://pure.tudelft.nl/ws/portalfiles/portal/175757249/willeke24-openfast-adapter.pdf). Please consider citing the report if you are using the adapter.
