@@ -1,0 +1,55 @@
+name: Build and run
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: precice/precice:nightly
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get -qq update
+          apt-get -qq install git cmake libblas-dev liblapack-dev gfortran g++
+      - name: Build OpenFAST
+        run: |
+          git clone https://github.com/OpenFAST/OpenFAST.git
+          cd OpenFAST
+          git switch --detach v3.5.3
+          mkdir build
+          cd build
+          cmake ..
+          make -j $(nproc)
+          make install
+      - name: Build OpenFAST adapter
+        run: |
+          cd src
+          mkdir build
+          cd build
+          OpenFAST_DIR=../OpenFAST/install/lib/cmake/OpenFAST cmake ..
+          make -j $(nproc)
+      - name: Build dummy-turbine fluid case
+        run: |
+          cd cases/dummy-turbine/fluid
+          cmake .
+          make -j $(nproc)
+      - name: Run dummy-turbine tutorial
+        run: |
+          cd cases/dummy-turbine/fluid
+          ./run.sh &
+          PIDOne=$!
+          cd ../openfast
+          PATH=../../build/:${PATH} ./run.sh &
+          PIDTwo=$!
+          wait $PIDOne
+          wait $PIDTwo
