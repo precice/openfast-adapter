@@ -49,7 +49,7 @@ jobs:
           ./run.sh &
           PIDOne=$!
           cd ../openfast
-          PATH="../../build/:${PATH}" ./run.sh &
+          PATH="../../../src/build/:${PATH}" ./run.sh &
           PIDTwo=$!
           wait $PIDOne
           wait $PIDTwo
