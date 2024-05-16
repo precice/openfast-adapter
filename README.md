@@ -13,8 +13,10 @@ Source: [OpenFAST documentation](https://ganesh-openfast.readthedocs.io/en/lates
 
 ## Dependencies
 
-- [OpenFAST v3.5.0](https://openfast.readthedocs.io/en/main/source/install/index.html)
-- [preCICE v3.0.0](https://precice.org/installation-overview.html) by installation from source from the [develop](https://github.com/precice/precice) branch
+- [OpenFAST v3.5.0](https://openfast.readthedocs.io/en/main/source/install/index.html), with the C++ API enabled
+  - Building from source: `cmake -DBUILD_OPENFAST_CPP_API=ON .. && make`
+  - Getting from Spack: `spack install openfast+cxx` (but build with an MPI compiler, see [issue](https://github.com/precice/openfast-adapter/issues/2))
+- [preCICE v3.0.0](https://precice.org/installation-overview.html) or later v3.x.
 
 > [!NOTE]  
 > If you are using a different version of OpenFAST and want to run the provided cases, make sure to check if the OpenFAST input files are [suitable](https://openfast.readthedocs.io/en/main/source/user/api_change.html) for your version
