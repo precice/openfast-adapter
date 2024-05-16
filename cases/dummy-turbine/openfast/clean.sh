@@ -1,11 +1,14 @@
-rm -r ./nrel5mw/*.chkp
-rm -r ./nrel5mw/*.outb
-rm -r ./nrel5mw/*.out
-rm -r ./nrel5mw/*.sum
-rm -r ./nrel5mw/*.ech
-rm -r ./nrel5mw/vtk
-rm -r ./*.h5
-rm -r ./*.bak
-rm -r ./turbineAlloc.0.txt
-rm -r ./precice-profiling
-rm -r ../precice-run
+#!/usr/bin/env bash
+set -e -u
+
+rm -rf ./nrel5mw/*.chkp
+rm -rf ./nrel5mw/*.outb
+rm -rf ./nrel5mw/*.out
+rm -rf ./nrel5mw/*.sum
+rm -rf ./nrel5mw/*.ech
+rm -rf ./nrel5mw/vtk
+rm -rf ./*.h5
+rm -rf ./*.bak
+rm -rf ./turbineAlloc.0.txt
+rm -rf ./precice-profiling
+rm -rf ../precice-run
