@@ -16,6 +16,8 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
+// Optional input for the library turbinesFoam
+/*
 turbine
 {
     type            axialFlowTurbineALSource;
@@ -141,5 +143,6 @@ turbine
         }
     }
 }
+*/
 
 // ************************************************************************* //

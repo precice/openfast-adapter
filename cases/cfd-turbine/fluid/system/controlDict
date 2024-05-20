@@ -49,7 +49,7 @@ maxCo           0.9;
 libs
 (
     // You might want to use the library turbinesFoam to implement actuator lines in OpenFOAM. See file "fvOptions" for input details.
-    //"libturbinesFoam.so"
+    // "libturbinesFoam.so"
 );
 
 functions
