@@ -1,5 +1,7 @@
 # preCICE-Openfast Adapter
 
+[![DOI badge](https://zenodo.org/badge/DOI/10.5281/zenodo.14809780.svg)](https://doi.org/10.5281/zenodo.14809780)
+
 ⚠️ The state of the adapter is experimental.
 
 [OpenFAST](https://openfast.readthedocs.io/en/dev/index.html) is a multi-physics engineering tool for the aero-servo-elastic simulation of wind turbines. It includes modules for the modeling of aerodynamic, structural, and electrical behaviour of on- and offshore wind turbines.
