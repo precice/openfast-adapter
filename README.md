@@ -72,7 +72,7 @@ You're good to go! If you want to re-compile the adapter, make sure to clean the
 
 ## References
 
-A more detailed description of the concept behind the adapter can be found in this [report](https://pure.tudelft.nl/ws/portalfiles/portal/175757249/willeke24-openfast-adapter.pdf). Please consider citing the report if you are using the adapter.
+A more detailed description of the concept behind the adapter can be found in this [report](https://doi.org/10.5281/zenodo.14809779). Please consider citing the report if you are using the adapter.
 
 ## License and attribution
 
